@@ -21,16 +21,15 @@ if ingredients_list:
 
     my_insert_stmt = """ insert into smoothies.public.orders(INGREDIENTS, NAME_ON_ORDER)
         values ('""" + ingredients_string + """','""" + name_on_order + """')"""
+    for fruit_chosen in ingredients_list:
+        ingredients_string += fruit_chosen + ' '
+        st.subheader(fruit_chosen + ' Nutrition Information')
+        fruityvice_response = requests.get(
+            "https://fruityvice.com/api/fruit/watermelon" + fruit_chosen)
+
+        fv_df = st. dataframe(data=fruityvice_response.json(),
+                              use_container_width=True)
 
     if st.button("Send order"):
         session.sql(my_insert_stmt).collect()
         st.success(f'Your Smoothie is ordered, {name_on_order}!', icon="✅")
-
-
-# New section to display fruityvice nutrition information
-fruityvice_response = requests.get(
-    "https://fruityvice.com/api/fruit/watermelon")
-# st.text(fruityvice_response.json())
-
-fv_df = st. dataframe(data=fruityvice_response.json(),
-                      use_container_width=True)
